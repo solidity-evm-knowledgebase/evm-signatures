@@ -180,5 +180,59 @@ return signer;
 }
 ```
 
+### ECDSA
+
+Elliptic Curve Digital Signature Algorithm
+
+ECDSA is used to:
+ - Generate KeyPairs
+ - Create Signatures
+ - Verify Signatures
+
+The curve used in ECDSA in Ethereum is the Secp256k1 curve (symmetrical about its x-axis)
+
+Generator Point G: constant point on the curve
+Order n: Prime number generated using G. It defines the length of the private key
+
+PrivateKey: generated as random integer within the range 0, n-1 (n being the order)
+PublicKey= p.G  ; where p=privateKey and . denotes the modular multiplication
+
+Impossible to calculate p from PublicKey= p.G (Elliptic Curve Discrete Logarithmic Problem)
+
+r: represents the x point on the elliptic curve
+R = k.G where k is a securely random number (the nonce)
+R = (x,y)
+r = x mod n
+
+s: proof signer knows the private key
+s is calculated using the nonce, the hash of the message, the private key, the r part of the signature and the order n.
+
+v: used to recover public key from r, and represents wether the point is in positive or negative y
+
+
+#### Verifying signatures using ECDSA
+
+It is essentially a reverse of what we did to generate the signature
+
+S1 = s^-1 (mod n)
+R'= (h * s1) * G = (r * s1) * pubKey
+R' = (x,y)
+r' = x mod n
+r' == r ?
+
+The EVM precompile ecrecover does this for us in smart contracts
+
+#### Signature Malleability
+
+Because the curve is symmetric about the x-axis, there are two valid signatures for each value of r.
+
+To address this, the value of s needs to be restricted to one half of the curve
+
+
+
+
+
+
+
 
 
