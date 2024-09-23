@@ -174,7 +174,7 @@ function getSigner712UsingOZ(uint256 _message, uint8 _v, bytes32 _r, bytes32 _s)
                           );
 
 (address signer, /*ECDSA.RecoverError recoverError*/, /*bytes32 signatureLength*/ = 
-  ECDSA.tryRecover(hashedMessage, _v, _r, _s);
+  ECDSA.recover(hashedMessage, _v, _r, _s);
 
 return signer;
 }
