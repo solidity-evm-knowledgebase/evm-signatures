@@ -4,7 +4,7 @@
 
 Before eip-191 and eip-712 standards we used to get the signer like this:
 
-```
+```solidity
 function getSignerSimple(uint256 message, uint8 _v, bytes32 _r, bytes32 _s) public pure returns (address) {
   bytes32 hashedMessage = bytes32(message); // if message was a string, we would use keccak256(abi.encodePacked(message))
   address signer = ecrecover(hashedMessage, _v, _r, _s);
@@ -44,7 +44,7 @@ Message to sign
 
 The getSigner code would like this after eip-191
 
-```
+```solidity
 function getSigner191(uint256 message, uint8 _v, bytes32 _r, bytes32 _s) public view returns (address) {
 
   // Arguments when calculating hash to validate
@@ -75,7 +75,8 @@ function getSigner191(uint256 message, uint8 _v, bytes32 _r, bytes32 _s) public 
 <domainSeperator>
 This is the version specific data. It represents the hash of the struct defining the domain of the message being signed
 <domainSeperator> = <hashStruct(eip712Domain)>
-
+```
+```solidity
 struct eip712Domain {
   string name;
   string version;
@@ -83,7 +84,8 @@ struct eip712Domain {
   address verifyingContract;
   bytes32 salt;
 }
-
+```
+```
 It can be written as:
 0x19 0x01 <hashStruct(eip712Domain)> <hashStruct(message)>
 ```
@@ -95,6 +97,9 @@ hashStruct is the hash of the type hash + the hash of the type itself
 bytes32 constant EIP712DOMAIN_TYPEHASH = keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
 
 // Define what our "domain" struct looks like
+```
+
+```solidity
 eip_712_domain_seperator_struct = EIP712Domain({
   name: "SignatureVerifier",
   version: "1",
@@ -115,7 +120,9 @@ domain_seperator = keccak256(
 
 ```
 <hashStruct(message)>
+```
 
+```solidity
 struct Message {
   uint256 number;
 }
@@ -132,7 +139,7 @@ bytes hashedMessage = keccak256(
 
 The getSigner code would like this after eip-712:
 
-```
+```solidity
 function getSigner712(uint256 message, uint8 _v, bytes32 _r, bytes32 _s) public view returns (address) {
 
   // Arguments when calculating hash to validate
@@ -161,7 +168,7 @@ function getSigner712(uint256 message, uint8 _v, bytes32 _r, bytes32 _s) public 
 
 Using OpenZeppelin to do it would look like this:
 
-```
+```solidity
 function getSigner712UsingOZ(uint256 _message, uint8 _v, bytes32 _r, bytes32 _s) public view returns (address) {
 
   bytes32 hashedMessage = _hashTypedDataV4(
