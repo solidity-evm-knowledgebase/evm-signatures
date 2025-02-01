@@ -6,7 +6,7 @@ Before eip-191 and eip-712 standards we used to get the signer like this:
 
 ```solidity
 function getSignerSimple(uint256 message, uint8 _v, bytes32 _r, bytes32 _s) public pure returns (address) {
-  bytes32 hashedMessage = bytes32(message); // if message was a string, we would use keccak256(abi.encodePacked(message))
+  bytes32 hashedMessage = keccak256(abi.encodePacked((message)));
   address signer = ecrecover(hashedMessage, _v, _r, _s);
   return signer;
 }
