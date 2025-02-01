@@ -34,7 +34,7 @@ The allowed values are:
 ```
 <version specific data>
 data associated with the version
-For example for 0x01, this is where we specify the validator address
+For example for 0x00, this is where we specify the validator address
 ```
 
 ```
